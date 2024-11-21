@@ -7,3 +7,6 @@ So the vanilla reinforce algorithm can not work with the mountain car continuous
 
 # REINFORCE - discrete
 The discrete reinforce works kinda well with the discrete cartpole environment, but is very noisy = has high variance, as can be seen in the plot of rewards over episodes.
+
+# REINFORCE - discrete with baseline
+The overall performance is much better than without the baseline, it has still variance but not that much. We can see that in the training history we achieved the max score many times and than forget and had to relearned.. = catastrophic forgetting.
