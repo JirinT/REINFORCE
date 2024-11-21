@@ -14,7 +14,7 @@ class PolicyNet(nn.Module):
         self.relu2 = nn.ReLU()
 
         self.linear3 = nn.Linear(in_features=128, out_features=2)
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=0)
 
         self.optimizer = optim.Adam(params=self.parameters(), lr=self.lr)
 

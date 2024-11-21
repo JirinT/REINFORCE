@@ -9,7 +9,7 @@ class ValueNet(nn.Module):
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(in_features=64, out_features=1)
 
-        self.criterion = optim.Adam(params=self.parameters(), lr=learning_rate)
+        self.optimizer = optim.Adam(params=self.parameters(), lr=learning_rate)
 
     def forward(self, x):
         x = self.linear1(x)
