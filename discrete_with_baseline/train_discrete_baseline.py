@@ -51,7 +51,7 @@ def update_value(value_net, cumm_rewards, state_values):
     value_net.optimizer.step()
 
 # ------------MAIN------------:
-NUM_EPISODES = 501
+NUM_EPISODES = 1000
 LEARNING_RATE = .001
 VIDEO_PERIOD = 100
 

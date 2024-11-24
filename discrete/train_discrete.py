@@ -50,13 +50,13 @@ def update_policy(policy_net, trajectory):
     policy_net.optimizer.step()
 
 # ------------MAIN------------:
-NUM_EPISODES = 501
+NUM_EPISODES = 1000
 LEARNING_RATE = .001
 VIDEO_PERIOD = 100
 
 env = gym.make("CartPole-v1", render_mode="rgb_array") # the states are x-axis position and velocity of the car
-env = RecordVideo(env, video_folder="cartpole-agent", name_prefix="training",
-                  episode_trigger=lambda x: x % VIDEO_PERIOD == 0)
+# env = RecordVideo(env, video_folder="cartpole-agent", name_prefix="training",
+                #   episode_trigger=lambda x: x % VIDEO_PERIOD == 0)
 env = RecordEpisodeStatistics(env)
 
 policy = PolicyNet(learning_rate=LEARNING_RATE)
