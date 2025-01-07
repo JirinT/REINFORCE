@@ -44,7 +44,7 @@ def update_value(value_net, reward, state_value, next_state_value, I):
 NUM_EPISODES = 500
 LEARNING_RATE = .001
 VIDEO_PERIOD = 100
-GAMMA = 0.99
+GAMMA = 0.98
 
 env = gym.make("CartPole-v1", render_mode="rgb_array") # the states are x-axis position and velocity of the car
 # env = RecordVideo(env, video_folder="cartpole-agent", name_prefix="training",
@@ -57,7 +57,7 @@ value = ValueNet(learning_rate=LEARNING_RATE)
 epi_stats = {
     "time" : [],
     "total_reward" : [],
-    "length" :[]
+    "length" : []
 }
 
 torch.autograd.set_detect_anomaly(True)

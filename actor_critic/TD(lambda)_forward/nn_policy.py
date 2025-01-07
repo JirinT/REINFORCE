@@ -1,6 +1,5 @@
 import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
 
 class PolicyNet(nn.Module):
     def __init__(self, learning_rate):
@@ -15,7 +14,7 @@ class PolicyNet(nn.Module):
         self.relu2 = nn.ReLU()
 
         self.linear3 = nn.Linear(in_features=128, out_features=2)
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=0)
 
         self.optimizer = optim.Adam(params=self.parameters(), lr=self.lr)
 
@@ -28,4 +27,4 @@ class PolicyNet(nn.Module):
 
         probs = self.softmax(x)
 
-        return probs #probs are probabilities (discrete probability distribution) of actions that yield highest rewards. its the softmax, we then sample from this probability distribution
+        return probs # the prediction is the mean and standard deviation of a probability density function.
