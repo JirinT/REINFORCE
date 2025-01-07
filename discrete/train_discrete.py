@@ -23,7 +23,7 @@ def custom_loss(action, reward, pdf):
 
 def get_action(action_probs): #the actions are picked from gaussian distribution of actions
     pdf = Categorical(action_probs) # creates probability density function
-    action = pdf.sample() # samples from pdf
+    action = pdf.sample() # samples from
     return action, pdf
 
 def cummulative_reward(rewards, gamma):
@@ -106,4 +106,8 @@ env.close()
 plt.figure(1)
 plt.plot(epi_stats["total_reward"])
 plt.title("Training statistics")
-plt.ylabel("Total rewards
+plt.ylabel("Total rewards")
+plt.xlabel("Episode number")
+plt.grid(True)
+
+plt.show()

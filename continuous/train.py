@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from torch.distributions import Normal
-from neural_net import PolicyNet
+from continuous.neural_net import PolicyNet
 from gymnasium.wrappers import RecordVideo, RecordEpisodeStatistics
     
 def custom_loss(action, reward, pdf):

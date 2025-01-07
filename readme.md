@@ -10,3 +10,9 @@ The discrete reinforce works kinda well with the discrete cartpole environment, 
 
 # REINFORCE - discrete with baseline
 The overall performance is much better than without the baseline, it has still variance but not that much. We can see that in the training history we achieved the max score many times and than forget and had to relearned.. = catastrophic forgetting.
+
+# Actor critic algorithms
+They all differ only in computing the target value - the reward
+- MC - computes the the target as the cummulative reward from each time step to end of episode - accurate and works quiet well
+- TD(0) - computes the target as the current reward plus discounted predicted value of the reward in the next state - $R + gammma*V(s_{t+1})$ - this approach is called bootstraping and updates the networks in each time step = online learning
+- TD(lambda) - computes the target as the cummulative reward of lamba steps ahead, but it does so for all the possible lambdas in each time step and computing wighted average from it. It is very slow because it neeeds to compute every lambda in each iteration
