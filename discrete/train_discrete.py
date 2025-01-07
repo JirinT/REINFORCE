@@ -106,8 +106,4 @@ env.close()
 plt.figure(1)
 plt.plot(epi_stats["total_reward"])
 plt.title("Training statistics")
-plt.ylabel("Total rewards")
-plt.xlabel("Episode number")
-plt.grid(True)
-
-plt.show()
+plt.ylabel("Total rewards
