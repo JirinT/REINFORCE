@@ -7,7 +7,7 @@ class PolicyNet(nn.Module):
 
         self.lr = learning_rate
 
-        self.linear1 = nn.Linear(in_features=2, out_features=128)
+        self.linear1 = nn.Linear(in_features=4, out_features=128)
         self.relu1 = nn.ReLU()
 
         self.linear2 = nn.Linear(in_features=128, out_features=128)

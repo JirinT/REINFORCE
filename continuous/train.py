@@ -13,9 +13,15 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from torch.distributions import Normal
-from continuous.neural_net import PolicyNet
+from neural_net import PolicyNet
 from gymnasium.wrappers import RecordVideo, RecordEpisodeStatistics
-    
+
+import os
+import sys
+from cartpole_environment import ContinuousCartPoleEnv
+env_path = os.path.join(os.path.abspath(os.getcwd()), '..\\Environments\\ContinuousCartPole')
+sys.path.append(env_path)
+
 def custom_loss(action, reward, pdf):
     log_prob = pdf.log_prob(action) # log_prob(action) = log(gaussian(action, mean, std))
     loss = -log_prob*reward
@@ -32,6 +38,8 @@ def cummulative_reward(rewards, gamma):
     for t in reversed(range(len(rewards))):
         running_sum = rewards[t] + gamma*running_sum
         R[t] = running_sum
+
+    # R = (R-R.mean())/R.std() # whitening discounted cummulative rewards
     return R
 
 def update_policy(policy_net, trajectory):
@@ -43,7 +51,7 @@ def update_policy(policy_net, trajectory):
         loss.append(custom_loss(trajectory["actions"][step], cumm_rewards[step], trajectory["pdfs"][step]))
 
     total_loss = sum(loss)
-    episode_score.append(total_loss)
+    episode_loss.append(total_loss)
 
     # Zero gradients, perform backward pass, and update policy
     policy_net.optimizer.zero_grad()
@@ -51,17 +59,15 @@ def update_policy(policy_net, trajectory):
     policy_net.optimizer.step()
 
 # ------------MAIN------------:
-NUM_EPISODES = 20
+NUM_EPISODES = 500
 LEARNING_RATE = .001
 VIDEO_PERIOD = 2
 
-env = gym.make("MountainCarContinuous-v0", render_mode="rgb_array") # the states are x-axis position and velocity of the car
-env = RecordVideo(env, video_folder="cartpole-agent", name_prefix="training",
-                  episode_trigger=lambda x: x % VIDEO_PERIOD == 0)
-env = RecordEpisodeStatistics(env)
+env = ContinuousCartPoleEnv()
+# env = gym.make("MountainCarContinuous-v0", render_mode="rgb_array") # the states are x-axis position and velocity of the car
 
 policy = PolicyNet(learning_rate=LEARNING_RATE)
- 
+
 trajectory = {
     "states": [],
     "actions": [],
@@ -69,31 +75,27 @@ trajectory = {
     "pdfs": []
 }
 
-epi_stats = {
-    "time" : [],
-    "total_reward" : [],
-    "length" :[]
-}
-
 predictions = {
     "mean": [],
     "std": []
 }
 
+episode_loss = []
 episode_score = []
 
 torch.autograd.set_detect_anomaly(True)
 
 for _ in tqdm(range(NUM_EPISODES)):
     done = False
-    state, _ = env.reset()
+    state = env.reset()
     trajectory = {key: [] for key in trajectory} # empty all the lists in trajectory before new episode
+    score = 0
     while not done:
         state = torch.tensor(state, dtype=torch.float32)
         mean, std = policy(state)
         action, pdf = get_action(mean, std) # pdf is the probability density function
 
-        next_state, reward, terminated, truncated, info = env.step([action.item()])
+        next_state, reward, done, _ = env.step([action.item()])
 
         trajectory["states"].append(state)
         trajectory["actions"].append(action)
@@ -102,29 +104,28 @@ for _ in tqdm(range(NUM_EPISODES)):
 
         predictions["mean"].append(mean.detach().numpy())
         predictions["std"].append(std.detach().numpy())
-
+        score += reward
         state = next_state
-        done = terminated or truncated
 
-    epi_stats["length"].append(info["episode"]["l"])
-    epi_stats["time"].append(info["episode"]["t"])
-    epi_stats["total_reward"].append(info["episode"]["r"])
-    
+    episode_score.append(score)
     update_policy(policy, trajectory)
 
 env.close()
 
-detached_score = [s.detach().numpy() for s in episode_score]
+detached_loss = [s.detach().numpy() for s in episode_loss]
 
 plt.figure(1)
-plt.plot(detached_score)
-plt.title("Loss")
+plt.plot(detached_loss)
+plt.title("Loss over episodes")
+plt.ylabel("Loss")
+plt.xlabel("Episodes")
 plt.grid(True)
 
 plt.figure(2)
-plt.plot(epi_stats["total_reward"])
-plt.title("Training statistics")
-plt.ylabel("Total rewards")
+plt.plot(episode_score)
+plt.title("Rewards over episodes")
+plt.ylabel("Rewards")
+plt.xlabel("Episodes")
 plt.grid(True)
 
 plt.figure(3)
