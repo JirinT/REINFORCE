@@ -39,7 +39,6 @@ def cummulative_reward(rewards, gamma):
         running_sum = rewards[t] + gamma*running_sum
         R[t] = running_sum
 
-    # R = (R-R.mean())/R.std() # whitening discounted cummulative rewards
     return R
 
 def update_policy(policy_net, trajectory):
@@ -64,7 +63,6 @@ LEARNING_RATE = .001
 VIDEO_PERIOD = 2
 
 env = ContinuousCartPoleEnv()
-# env = gym.make("MountainCarContinuous-v0", render_mode="rgb_array") # the states are x-axis position and velocity of the car
 
 policy = PolicyNet(learning_rate=LEARNING_RATE)
 
