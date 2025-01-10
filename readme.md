@@ -18,7 +18,15 @@ They all differ only in computing the target value - the reward
 - **TD(lambda)** - computes the target as the cummulative reward of lamba steps ahead, but it does so for all the possible lambdas in each time step and computing wighted average from it. It is very slow because it neeeds to compute every lambda in each iteration
 - **TD(backward lambda)** - Also uses bootstraping as TD(0) and performs online update (=in every time step). It computes z-traces, which is parametrized by lambda = a compromise between frequency and recency of events. The z-traces are restarted for each episode and are updated in every time step, thanks to this the algorithm remembers what it learned and is less prone to catastrophic forgetting
 
-# OFF policy:
-- **Vanilla off policy policy gradients** - In an off-policy algorithm, the agent learns from a different policy than it is actually executing. The agent is executing the behavioral policy. In this case the behavioral policy is just uniform distribution of actions and we sample from this. The **target policy** is then updated based on the gained reward from the behavioral policy and based on ratio of $Probability of picking action a with target policy / probability of picking action a with behavioral policy, where action a is sampled from behavioral policy. The final update of the target policy is given by:
+## OFF Policy:
+- **Vanilla Off-Policy Policy Gradients**: In an off-policy algorithm, the agent learns from a different policy than the one it is currently executing. The agent executes the **behavioral policy**, which in this case is a uniform distribution of actions, and actions are sampled from this distribution. The **target policy** is then updated based on the rewards obtained from the behavioral policy and the ratio:
+
+$Probability of picking action a with target policy / probability of picking action a with behavioral policy$
+
+where `a` is the action sampled from the behavioral policy.
+
+The final update of the target policy is given by:
+
 ![equation](https://latex.codecogs.com/svg.image?\theta=\theta&plus;R\cdot\rho\cdot\nabla\log&space;P(a\mid\text{target&space;policy}))
+
 where `ρ` is the ratio, `R` represents the rewards obtained from the behavioral policy, and `log P` is the logarithmic probability of taking action `a` under the target policy.
