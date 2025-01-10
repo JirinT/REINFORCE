@@ -20,13 +20,8 @@ They all differ only in computing the target value - the reward
 
 ## OFF Policy:
 - **Vanilla Off-Policy Policy Gradients**: In an off-policy algorithm, the agent learns from a different policy than the one it is currently executing. The agent executes the **behavioral policy**, which in this case is a uniform distribution of actions, and actions are sampled from this distribution. The **target policy** is then updated based on the rewards obtained from the behavioral policy and the ratio:
-
 $Probability of picking action a with target policy / probability of picking action a with behavioral policy$
-
 where `a` is the action sampled from the behavioral policy.
-
 The final update of the target policy is given by:
-
 ![equation](https://latex.codecogs.com/svg.image?\theta=\theta&plus;R\cdot\rho\cdot\nabla\log&space;P(a\mid\text{target&space;policy}))
-
 where `ρ` is the ratio, `R` represents the rewards obtained from the behavioral policy, and `log P` is the logarithmic probability of taking action `a` under the target policy.
